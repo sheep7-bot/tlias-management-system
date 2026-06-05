@@ -1,0 +1,43 @@
+# Java
+*.class
+*.jar
+*.war
+target/
+
+# Maven
+!mvnw
+!mvnw.cmd
+!/.mvn
+
+# Node
+node_modules/
+
+# Vue build
+vue-tlias-management/dist/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+
+# Nginx
+nginx-1.22.0-web/
+
+# Memory search
+.memsearch/
+
+# Temp
+temp/

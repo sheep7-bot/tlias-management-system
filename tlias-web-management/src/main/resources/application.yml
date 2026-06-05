@@ -1,0 +1,57 @@
+# 服务器配置
+server:
+  port: 8080
+
+# 数据库连接配置
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/tlias?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+  servlet:
+    multipart:
+      #      单个最大文件大小为 1M
+      max-file-size: 1MB
+      #      最大请求体大小为 2M
+      max-request-size: 2MB
+
+# MyBatis 配置
+mybatis:
+  # 日志输出（开发时方便查看 SQL）
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 开启驼峰命名映射（entry_date -> entryDate）
+    map-underscore-to-camel-case: true
+  # XML 映射文件位置
+  mapper-locations: classpath:com/itheima/mapper/*.xml
+
+# PageHelper 分页插件配置
+pagehelper:
+  # 指定数据库方言为 MySQL
+  helper-dialect: mysql
+  # 启用合理化分页（页码<=0 时查询第一页，超过总页数时查询最后一页）
+  reasonable: true
+  # 支持通过 Mapper 接口参数传递分页参数
+  support-methods-arguments: true
+
+# 日志配置
+logging:
+  level:
+    org.springframework.jdbc.support.JdbcTransactionManager: debug
+
+# ... existing code ...
+
+# 阿里云OSS配置
+aliyun:
+  oss:
+    # OSS访问端点（华北2-北京）
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    # Bucket名称
+    bucket-name: lx-java-ai-01
+    # OSS区域
+    region: cn-beijing
+    # AccessKey ID（可选，建议通过环境变量设置）
+    # access-key-id: your-access-key-id
+    # AccessKey Secret（可选，建议通过环境变量设置）
+    # access-key-secret: your-access-key-secret

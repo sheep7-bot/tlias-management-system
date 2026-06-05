@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>排序算法可视化</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎯 排序算法可视化</h1>
+      <p>交互式展示经典排序算法的执行过程</p>
+    </header>
+
+    <div class="controls">
+      <div class="control-group">
+        <label for="algorithm">选择算法：</label>
+        <select id="algorithm">
+          <option value="bubble">冒泡排序 (Bubble Sort)</option>
+          <option value="selection">选择排序 (Selection Sort)</option>
+          <option value="insertion" selected>插入排序 (Insertion Sort)</option>
+          <option value="shell">希尔排序 (Shell Sort)</option>
+          <option value="merge">归并排序 (Merge Sort)</option>
+          <option value="quick">快速排序 (Quick Sort)</option>
+          <option value="heap">堆排序 (Heap Sort)</option>
+          <option value="counting">计数排序 (Counting Sort)</option>
+          <option value="radix">基数排序 (Radix Sort)</option>
+          <option value="bogo">🐢 Bogo 排序 (Bogo Sort)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="size">数组大小：</label>
+        <input type="range" id="size" min="10" max="150" value="50">
+        <span id="sizeValue">50</span>
+      </div>
+
+      <div class="control-group">
+        <label for="speed">速度：</label>
+        <input type="range" id="speed" min="1" max="10" value="5">
+        <span id="speedValue">中等</span>
+      </div>
+
+      <div class="button-group">
+        <button id="generateBtn" class="btn btn-primary">🔄 生成新数组</button>
+        <button id="sortBtn" class="btn btn-success">▶ 开始排序</button>
+        <button id="stopBtn" class="btn btn-danger" disabled>⏹ 停止</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-item">
+        <span class="stat-label">比较次数：</span>
+        <span id="comparisons" class="stat-value">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">交换次数：</span>
+        <span id="swaps" class="stat-value">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">运行时间：</span>
+        <span id="time" class="stat-value">0 ms</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">当前状态：</span>
+        <span id="status" class="stat-value status-idle">就绪</span>
+      </div>
+    </div>
+
+    <div class="visualization-container">
+      <div id="bars-container"></div>
+    </div>
+
+    <div class="algorithm-info">
+      <h3 id="algoName">插入排序 (Insertion Sort)</h3>
+      <div class="complexity">
+        <span class="badge" id="timeComplexity">时间复杂度: O(n²)</span>
+        <span class="badge" id="spaceComplexity">空间复杂度: O(1)</span>
+        <span class="badge" id="stability">稳定性: 稳定 ⚡</span>
+      </div>
+      <p id="algoDescription">
+        插入排序的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。
+      </p>
+      <pre id="algoCode" class="code-block"></pre>
+    </div>
+  </div>
+
+  <script src="js/sortingAlgorithms.js"></script>
+  <script src="js/visualizer.js"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    Mapper 映射文件
+    namespace 必须与对应的 Mapper 接口全限定名一致
+-->
+<mapper namespace="com.itheima.mapper.EmpMapper">
+
+    <!--
+        员工多条件动态查询
+        id 必须与接口中的方法名一致
+        resultType 指定返回结果的类型
+    -->
+    <select id="findByCondition" resultType="com.itheima.pojo.Emp">
+        SELECT * FROM emp
+        <!--
+            where 标签：智能处理 SQL 拼接
+            - 自动添加 WHERE 关键字
+            - 自动去除第一个 AND 或 OR
+            - 如果没有任何条件，不生成 WHERE 子句
+        -->
+        <where>
+            <!--
+                姓名模糊查询条件
+                test 表达式：判断参数是否有效
+                CONCAT('%', #{name}, '%')：防止 SQL 注入的模糊查询写法
+            -->
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+
+            <!--
+                性别精确查询条件
+                只有当 gender 不为 null 时才添加此条件
+            -->
+            <if test="gender != null">
+                AND gender = #{gender}
+            </if>
+
+            <!--
+                入职开始日期条件
+                entry_date >= begin：大于等于开始日期
+                &gt; 是 > 的 XML 转义写法
+            -->
+            <if test="begin != null">
+                AND entry_date &gt;= #{begin}
+            </if>
+
+            <!--
+                入职结束日期条件
+                entry_date <= end：小于等于结束日期
+                &lt; 是 < 的 XML 转义写法
+            -->
+            <if test="end != null">
+                AND entry_date &lt;= #{end}
+            </if>
+        </where>
+
+        <!--
+            按修改时间倒序排序
+            DESC：降序，最新修改的记录排在前面
+        -->
+        ORDER BY update_time DESC
+    </select>
+    <!--
+        新增员工
+        useGeneratedKeys="true"：获取数据库自动生成的主键
+        keyProperty="id"：将生成的主键值设置到 emp 对象的 id 属性中
+    -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO emp (username, password, name, gender, phone, job, salary, image, entry_date, dept_id, create_time, update_time)
+        VALUES (#{username}, #{password}, #{name}, #{gender}, #{phone}, #{job}, #{salary}, #{image}, #{entryDate}, #{deptId}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 根据ID查询员工 -->
+    <select id="findById" resultType="com.itheima.pojo.Emp">
+        SELECT * FROM emp WHERE id = #{id}
+    </select>
+
+    <!-- 批量删除员工 -->
+    <delete id="deleteByIds">
+        DELETE FROM emp WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 更新员工信息 -->
+    <update id="update">
+        UPDATE emp
+        <set>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="job != null">job = #{job},</if>
+            <if test="salary != null">salary = #{salary},</if>
+            <if test="image != null and image != ''">image = #{image},</if>
+            <if test="entryDate != null">entry_date = #{entryDate},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <!--
+     统计员工性别分布
+     返回格式：[{"name": "男性员工", "count": 5}, {"name": "女性员工", "count": 6}]
+ -->
+    <select id="countEmpGender" resultType="java.util.HashMap">
+        SELECT
+            CASE gender
+                WHEN 1 THEN '男性员工'
+                WHEN 2 THEN '女性员工'
+                ELSE '未知'
+                END as name,
+            COUNT(*) as value
+        FROM emp
+        GROUP BY gender
+        ORDER BY gender
+    </select>
+
+    <!--
+        统计各职位的员工人数
+        返回格式：[{"jobName": "班主任", "count": 13}, ...]
+    -->
+    <select id="countEmpJob" resultType="java.util.HashMap">
+        SELECT
+            CASE job
+                WHEN 1 THEN '班主任'
+                WHEN 2 THEN '讲师'
+                WHEN 3 THEN '学工主管'
+                WHEN 4 THEN '教研主管'
+                WHEN 5 THEN '咨询师'
+                ELSE '其他'
+                END as jobName,
+            COUNT(*) as count
+        FROM emp
+        GROUP BY job
+        ORDER BY count DESC
+    </select>
+
+    <!-- 查询全部员工 -->
+    <select id="findAll" resultType="com.itheima.pojo.Emp">
+        SELECT id, username, name, gender, image, job, salary, entry_date, dept_id, create_time, update_time
+        FROM emp
+        ORDER BY update_time DESC
+    </select>
+
+    <!-- 根据用户名和密码查询员工（登录验证） -->
+    <select id="selectByUsernameAndPassword" resultType="com.itheima.pojo.Emp">
+        SELECT id, username, name, password
+        FROM emp
+        WHERE username = #{username} AND password = #{password}
+    </select>
+
+</mapper>
+
+
+
+
